@@ -69,7 +69,6 @@ export async function getAdminAllProductsByCategory(
   query,
   page
 ) {
-  console.log(query);
   let products = [];
   if (q) {
     const filter = {};
@@ -132,7 +131,6 @@ export async function getAdminAllUsers(q, searchFilter, query, page) {
       .sort(query)
       .toArray();
   } else {
-    console.log(query);
     users = await getUsers()
       .find()
       .skip((Number(page) - 1) * 10)
