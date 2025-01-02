@@ -56,6 +56,12 @@ const validateSignup = [
 ];
 
 const validateUpdateProfile = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("이름을 입력해주세요.")
+    .isLength({ min: 1, max: 15 })
+    .withMessage("전화번호 양식에 맞게 입력해주세요."),
   body("phone")
     .trim()
     .notEmpty()

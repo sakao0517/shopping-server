@@ -115,7 +115,7 @@ export async function getUserInfo(req, res) {
 export async function updateProfile(req, res) {
   const user = await authRepository.getUserById(req.userId);
   if (!user) return res.status(401).json({ message: "get user error" });
-  const { phone, address1, address2, zipcode, password, newPassword } =
+  const { name, phone, address1, address2, zipcode, password, newPassword } =
     req.body;
   if (password) {
     if (!newPassword) {
@@ -145,6 +145,7 @@ export async function updateProfile(req, res) {
     }
   }
   await authRepository.updateUser(user.id, {
+    name,
     phone,
     address1,
     address2,

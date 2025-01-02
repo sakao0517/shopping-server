@@ -11,6 +11,8 @@ import adminRouter from "./router/admin.js";
 import homeRouter from "./router/home.js";
 import categoryRouter from "./router/category.js";
 import productPageSettingRouter from "./router/productPageSetting.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 // const corsOption = {
@@ -43,6 +45,6 @@ app.use((error, req, res, next) => {
 });
 
 connectMongo().then(() => {
-  app.listen(8080);
+  app.listen(process.env.PORT);
   console.log("---server start---");
 });
