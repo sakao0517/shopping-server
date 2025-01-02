@@ -13,15 +13,15 @@ import categoryRouter from "./router/category.js";
 import productPageSettingRouter from "./router/productPageSetting.js";
 
 const app = express();
-const corsOption = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus: 200,
-  credentials: true,
-};
+// const corsOption = {
+//   origin: "http://localhost:3000",
+//   optionsSuccessStatus: 200,
+//   credentials: true,
+// };
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors(corsOption));
+app.use(cors());
 app.use(cookieParser());
 app.use(morgan("tiny"));
 app.use(helmet());
