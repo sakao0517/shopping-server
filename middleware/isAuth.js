@@ -23,7 +23,6 @@ export async function isAuth(req, res, next) {
       }
       const user = await authRepository.getUserById(decoded.userId);
       if (!user) {
-        console.log("token error");
         return res.status(401).json({ message: "token error" });
       }
       req.userId = user.id;
