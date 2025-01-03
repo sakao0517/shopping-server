@@ -61,25 +61,21 @@ const validateUpdateProfile = [
     .notEmpty()
     .withMessage("이름을 입력해주세요.")
     .isLength({ min: 1, max: 15 })
-    .withMessage("전화번호 양식에 맞게 입력해주세요."),
+    .withMessage("이름은 1자 이상 15자 이하로 입력해주세요."),
   body("phone")
     .trim()
     .notEmpty()
     .withMessage("전화번호를 입력해주세요.")
     .isLength({ min: 11, max: 11 })
     .withMessage("전화번호 양식에 맞게 입력해주세요."),
-  body("password")
-    .isLength({ min: 6, max: 20 })
-    .withMessage("비밀번호를 입력해주세요.(6자 이상 20자 이하)")
-    .optional({ nullable: true, checkFalsy: true }),
-  body("checkPassword")
-    .isLength({ min: 6, max: 20 })
-    .withMessage("비밀번호 확인을 입력해주세요.(6자 이상 20자 이하)")
-    .optional({ nullable: true, checkFalsy: true }),
   validate,
 ];
 
-router.post("/login", wrapAsyncController(authController.login));
+router.post(
+  "/login",
+  validateCredential,
+  wrapAsyncController(authController.login)
+);
 router.get("/me", isAuth, wrapAsyncController(authController.me));
 router.post(
   "/signup",

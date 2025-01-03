@@ -118,13 +118,25 @@ export async function updateProfile(req, res) {
   const { name, phone, address1, address2, zipcode, password, newPassword } =
     req.body;
   if (password) {
+    if (password.trim().length < 6 || password.trim().length > 20)
+      return res
+        .status(401)
+        .json({ message: "기존 비밀번호를 입력해주세요.(6자 이상 20자 이하)" });
     if (!newPassword) {
-      return res.status(401).json({ message: "새 비밀번호를 입력해주세요." });
+      return res
+        .status(401)
+        .json({ message: "새 비밀번호를 입력해주세요.(6자 이상 20자 이하)" });
     }
   }
   if (newPassword) {
+    if (newPassword.trim().length < 6 || password.trim().length > 20)
+      return res
+        .status(401)
+        .json({ message: "새 비밀번호를 입력해주세요.(6자 이상 20자 이하)" });
     if (!password) {
-      return res.status(401).json({ message: "기존 비밀번호를 입력해주세요." });
+      return res
+        .status(401)
+        .json({ message: "기존 비밀번호를 입력해주세요.(6자 이상 20자 이하)" });
     }
   }
   if (password) {
