@@ -143,7 +143,9 @@ export async function updateProfile(req, res) {
     if (newPassword) {
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
-        return res.status(401).json({ message: "비밀번호가 잘못되었습니다." });
+        return res
+          .status(401)
+          .json({ message: "기존 비밀번호가 잘못되었습니다." });
       }
       if (password === newPassword) {
         return res
