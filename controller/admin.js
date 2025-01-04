@@ -39,8 +39,17 @@ export async function getAdminProduct(req, res) {
 }
 
 export async function addAdminProduct(req, res) {
-  const { name, price, category, img, stock, description, isNew, createdAt } =
-    req.body;
+  const {
+    name,
+    price,
+    category,
+    img,
+    stock,
+    description,
+    createdAt,
+    isNew,
+    isVisible,
+  } = req.body;
   await adminRepository.addAdminProduct({
     name,
     price,
@@ -48,8 +57,9 @@ export async function addAdminProduct(req, res) {
     img,
     stock,
     description,
-    isNew,
     createdAt,
+    isNew,
+    isVisible,
   });
   return res.sendStatus(200);
 }
@@ -74,7 +84,8 @@ export async function updateAdminProduct(req, res) {
     return res.status(400).json({
       message: "get product error",
     });
-  const { name, price, category, img, stock, description, isNew } = req.body;
+  const { name, price, category, img, stock, description, isNew, isVisible } =
+    req.body;
   await adminRepository.updateAdminProduct(productId, {
     name,
     price,
@@ -83,6 +94,7 @@ export async function updateAdminProduct(req, res) {
     stock,
     description,
     isNew,
+    isVisible,
   });
   return res.sendStatus(200);
 }
