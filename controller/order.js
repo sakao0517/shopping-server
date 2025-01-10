@@ -2,6 +2,7 @@ import * as authRepository from "../data/auth.js";
 import * as orderRepository from "../data/order.js";
 import * as productRepository from "../data/product.js";
 import dayjs from "dayjs";
+import { sendOrderEmail } from "./mail2.js";
 
 dayjs.locale("ko");
 
@@ -169,5 +170,10 @@ export async function successOrder(req, res) {
   }
   const newCart = [];
   await authRepository.updateCart(user.id, newCart);
+  try {
+    await sendOrderEmail(newOrder.email, newOrder);
+  } catch (error) {
+    return res.sendStatus(200);
+  }
   return res.sendStatus(200);
 }

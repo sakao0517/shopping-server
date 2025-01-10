@@ -354,7 +354,7 @@ export async function resetPassword(req, res) {
     async (error, decoded) => {
       if (error) {
         return res.status(401).json({
-          message: "token error",
+          message: "expired token",
         });
       }
       user = await authRepository.getUserByEmail(decoded.email);
@@ -381,7 +381,7 @@ async function createJwtToken(userId) {
 
 async function createJwtTokenInResetPassword(email) {
   return jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_SEC,
+    expiresIn: process.env.JWT_RESET_EMAIL_EXPIRES_SEC,
   });
 }
 

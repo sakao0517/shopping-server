@@ -12,20 +12,25 @@ const transporter = createTransport({
   },
 });
 
-export async function sendResetPasswordEmail(email, token) {
-  if (!email || !token) return;
+export async function sendOrderEmail(email, order) {
+  if (!email || !order) return;
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: `<${process.env.EMAIL}>`, // sender address
     to: email, // list of receivers
-    subject: "[브랜드이름] 비밀번호 초기화를 위한 안내 메일입니다", // Subject line
+    subject: `[브랜드이름] 주문이 접수되었습니다.`, // Subject line
     html:
-      "<p>비밀번호 초기화를 위해 아래의 URL을 클릭하여 주세요.</p>" +
-      "<br />" +
-      `<a href="${process.env.CLIENT_URL}/account/resetPassword?token=${token}">비밀번호 재설정 링크</a>`, // html body
+      `<p>${order.name} 고객님</p>` +
+      `<br />` +
+      `<p>주문이 접수되었습니다.</p>` +
+      `<p>주문하신 상품은 주문 확인 후 발송될 예정입니다.</p>` +
+      `<br />` +
+      `<p>주문 번호: ${order.orderId}</p>` +
+      `<br />` +
+      `<p>감사합니다.</p>`,
   });
 
   console.log("Message sent: %s", info);
 }
 
-sendResetPasswordEmail().catch(console.error);
+sendOrderEmail().catch(console.error);
