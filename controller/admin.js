@@ -86,6 +86,7 @@ export async function updateAdminProduct(req, res) {
     });
   const { name, price, category, img, stock, description, isNew, isVisible } =
     req.body;
+  console.log(category);
   await adminRepository.updateAdminProduct(productId, {
     name,
     price,
