@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendResetPasswordEmail } from "./mail.js";
 import dayjs from "dayjs";
+import { koreaTimeNow } from "../utils/koreaTimeNow.js";
 
 dayjs.locale("ko");
 dotenv.config();
@@ -60,7 +61,7 @@ export async function signup(req, res) {
     address1: "",
     address2: "",
     zipcode: "",
-    createdAt: dayjs(Date.now()).format("YYYY-MM-DDTHH:mm:ss"),
+    createdAt: dayjs(koreaTimeNow()).format("YYYY-MM-DDTHH:mm:ss"),
     tmpOrders: [],
     orders: [],
   });
@@ -214,7 +215,7 @@ export async function addToCart(req, res) {
         size,
         qty: 1,
       },
-      createdAt: dayjs(Date.now()).format("YYYY-MM-DDTHH:mm:ss"),
+      createdAt: dayjs(koreaTimeNow()).format("YYYY-MM-DDTHH:mm:ss"),
     },
   ];
   await authRepository.updateCart(user.id, newCart);

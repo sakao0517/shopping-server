@@ -74,5 +74,11 @@ router.delete(
   isAdmin,
   wrapAsyncController(adminController.deleteAdminOrder)
 );
+router.put(
+  "/order/cancel",
+  isAuth,
+  isAdmin,
+  wrapAsyncController(adminController.cancelOrder)
+);
 
 export default router;

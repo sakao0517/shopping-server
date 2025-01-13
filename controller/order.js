@@ -3,6 +3,7 @@ import * as orderRepository from "../data/order.js";
 import * as productRepository from "../data/product.js";
 import dayjs from "dayjs";
 import { sendOrderEmail } from "./mail2.js";
+import { koreaTimeNow } from "../utils/koreaTimeNow.js";
 
 dayjs.locale("ko");
 
@@ -99,7 +100,9 @@ export async function uploadTmpOrder(req, res) {
       cart,
       orderStatus: "주문 확인 중",
       trackingNumber: "-",
-      createdAt: dayjs(Date.now()).format("YYYY-MM-DDTHH:mm:ss"),
+      isCancel: false,
+      cancels: [],
+      createdAt: dayjs(koreaTimeNow()).format("YYYY-MM-DDTHH:mm:ss"),
     },
     ...tmpOrders,
   ];
@@ -152,7 +155,7 @@ export async function successOrder(req, res) {
   const tmpOrder = user.tmpOrders.find((order) => order.orderId === orderId);
   const newOrder = {
     ...tmpOrder,
-    succeedAt: dayjs(Date.now()).format("YYYY-MM-DDTHH:mm:ss"),
+    succeedAt: dayjs(koreaTimeNow()).format("YYYY-MM-DDTHH:mm:ss"),
     paymentKey,
   };
   await orderRepository.insertOrder(newOrder);

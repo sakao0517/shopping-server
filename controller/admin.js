@@ -5,6 +5,7 @@ import * as orderRepository from "../data/order.js";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import dayjs from "dayjs";
+import { koreaTimeNow } from "../utils/koreaTimeNow.js";
 
 dayjs.locale("ko");
 dotenv.config();
@@ -72,7 +73,7 @@ export async function updateDateAdminProduct(req, res) {
       message: "get product error",
     });
   await adminRepository.updateAdminProduct(productId, {
-    createdAt: dayjs(Date.now()).format("YYYY-MM-DDTHH:mm:ss"),
+    createdAt: dayjs(koreaTimeNow()).format("YYYY-MM-DDTHH:mm:ss"),
   });
   return res.sendStatus(200);
 }
@@ -285,5 +286,37 @@ export async function deleteAdminOrder(req, res) {
   const newOrders = user.orders.filter((order) => order.orderId !== id);
   await adminRepository.updateAdminUser(user.id, { orders: newOrders });
   await adminRepository.deleteAdminOrder(id);
+  return res.sendStatus(200);
+}
+
+export async function cancelOrder(req, res) {
+  const user = await authRepository.getUserById(req.userId);
+  if (!user) return res.status(401).json({ message: "get user error" });
+  const { orderId, cancelReason, cancelAmount } = req.body;
+  if (!orderId || !cancelReason || cancelAmount == null)
+    return res.status(400).json({
+      message: "문제가 발생했습니다. 다시 시도하세요.",
+    });
+  const order = user.orders.find((order) => order.orderId === orderId);
+  if (!order) return res.status(400).json({ message: "get order error" });
+  const newCancel = {
+    cancelReason,
+    cancelAmount,
+    createdAt: dayjs(koreaTimeNow()).format("YYYY-MM-DDTHH:mm:ss"),
+  };
+  const newCancels = [...order.cancels, newCancel];
+  const isCancel = true;
+  await orderRepository.updateOrderById(orderId, {
+    isCancel,
+    cancels: newCancels,
+  });
+
+  const newOrders = user.orders;
+  const findUpdateOrderIndex = newOrders.findIndex(
+    (order) => order.orderId === orderId
+  );
+  newOrders[findUpdateOrderIndex].isCancel = isCancel;
+  newOrders[findUpdateOrderIndex].cancels = newCancels;
+  await adminRepository.updateAdminUser(user.id, { orders: newOrders });
   return res.sendStatus(200);
 }
