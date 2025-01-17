@@ -131,7 +131,7 @@ export async function verifyOrder(req, res) {
     body: '{"reason":"결제 검증 오류"}',
   };
   const tmpOrder = user.tmpOrders.find((order) => order.orderId === orderId);
-  if (!tmpOrder) {
+  if (tmpOrder) {
     const response = await fetch(url, options);
     if (!response.ok) {
       return res.status(400).json({
