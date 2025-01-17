@@ -135,7 +135,7 @@ export async function verifyOrder(req, res) {
     const response = await fetch(url, options);
     if (!response.ok) {
       return res.status(400).json({
-        message: `결제에 오류가 발생했습니다.(관리자에게 문의해주세요.)`,
+        message: `잘못된 결제입니다.(관리자에게 문의해주세요.)`,
       });
     }
     return res.status(400).json({ message: "get order error" });
