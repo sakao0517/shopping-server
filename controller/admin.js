@@ -299,6 +299,25 @@ export async function cancelOrder(req, res) {
     });
   const order = user.orders.find((order) => order.orderId === orderId);
   if (!order) return res.status(400).json({ message: "get order error" });
+
+  const url = `https://api.portone.io/payments/${orderId}/cancel`;
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `PortOne ${process.env.V2_API_SECRET}`,
+    },
+    body: `{"reason":"${cancelReason}", "amount":${cancelAmount}}`,
+  };
+  const response = await fetch(url, options);
+  const data = await response.json();
+  if (!response.ok) {
+    console.log(data);
+    return res.status(400).json({
+      message: `${data?.message || data?.type}`,
+    });
+  }
+
   const newCancel = {
     cancelReason,
     cancelAmount,

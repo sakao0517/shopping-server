@@ -8,19 +8,18 @@ export async function getProductsByPage(req, res) {
   const { page } = req.query;
   let products;
   let totalLength;
-  const productPageSetting =
-    await productPageSettingRepository.getProductPageSetting();
+  const productMaxLength = 12; //product 개수
   if (category === "new") {
     products = await productRepository.getNewProductsByPage(
       page,
-      productPageSetting.productMaxLength
+      productMaxLength
     );
     totalLength = await productRepository.getNewProductsLength();
   } else {
     products = await productRepository.getAllProductsByCategoryByPage(
       category,
       page,
-      productPageSetting.productMaxLength
+      productMaxLength
     );
     totalLength = await productRepository.getAllProductsLengthByCategory(
       category
