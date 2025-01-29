@@ -290,15 +290,22 @@ export async function deleteAdminOrder(req, res) {
 }
 
 export async function cancelOrder(req, res) {
-  const user = await authRepository.getUserById(req.userId);
-  if (!user) return res.status(401).json({ message: "get user error" });
   const { orderId, cancelReason, cancelAmount } = req.body;
   if (!orderId || !cancelReason || cancelAmount == null)
     return res.status(400).json({
       message: "문제가 발생했습니다. 다시 시도하세요.",
     });
-  const order = user.orders.find((order) => order.orderId === orderId);
-  if (!order) return res.status(400).json({ message: "get order error" });
+
+  const order = await orderRepository.getOrderById(orderId);
+  if (!order)
+    return res.status(400).json({
+      message: "get user error",
+    });
+  const user = await authRepository.getUserById(order.userId);
+  if (!user)
+    return res.status(400).json({
+      message: "get user error",
+    });
 
   const url = `https://api.portone.io/payments/${orderId}/cancel`;
   const options = {
