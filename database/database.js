@@ -8,7 +8,7 @@ let db;
 
 export async function connectMongo() {
   const client = new MongoClient(url);
-  db = client.db("shop-sample");
+  db = client.db("shopping");
 }
 export function getProductPageSettings() {
   return db.collection("productPageSetting");
