@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import dayjs from "dayjs";
 import { koreaTimeNow } from "../utils/koreaTimeNow.js";
+import { sendReturnEmail } from "./mail3.js";
 
 dayjs.locale("ko");
 dotenv.config();
@@ -87,7 +88,6 @@ export async function updateAdminProduct(req, res) {
     });
   const { name, price, category, img, stock, description, isNew, isVisible } =
     req.body;
-  console.log(category);
   await adminRepository.updateAdminProduct(productId, {
     name,
     price,
@@ -319,7 +319,6 @@ export async function cancelOrder(req, res) {
   const response = await fetch(url, options);
   const data = await response.json();
   if (!response.ok) {
-    console.log(data);
     return res.status(400).json({
       message: `${data?.message || data?.type}`,
     });
@@ -344,5 +343,11 @@ export async function cancelOrder(req, res) {
   newOrders[findUpdateOrderIndex].isCancel = isCancel;
   newOrders[findUpdateOrderIndex].cancels = newCancels;
   await adminRepository.updateAdminUser(user.id, { orders: newOrders });
+
+  try {
+    await sendReturnEmail(user.email, order, cancelAmount);
+  } catch (error) {
+    return res.sendStatus(200);
+  }
   return res.sendStatus(200);
 }
